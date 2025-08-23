@@ -294,7 +294,7 @@ VALUEFORM."
   "Bind variable `$' to value of VARFORM and conditionally evaluate BODYFORM.
 
 If VARFORM yields a non-nil value, bind the symbol `$' to that value,
-evalute BODYFORM with that binding in effect, and return the value of
+evaluate BODYFORM with that binding in effect, and return the value of
 BODYFORM.  If VARFORM yields nil, do not evaluate BODYFORM, and return
 nil."
   (declare (debug (form form)))
