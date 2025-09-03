@@ -44,7 +44,7 @@
                  (make-symbol (format "%s%d" (or prefix "g") num)))))))
        ,@body)))
 
-(defmacro cond-let-test--macroexpansion (all &optional value form expansion) ;TEMP optional
+(defmacro cond-let-test--macroexpansion (all value form expansion)
   (declare (indent 2))
   `(cond-let-test--with-deterministic-gensym
      (should (equal (,(if all #'macroexpand-all #'macroexpand) ',form)
