@@ -133,8 +133,45 @@
             (throw ':cond-let*1 (list a b d))))))))
 
 (ert-deftest cond-let-test--102-expand--cond-let ()
-  (cond-let-test--macroexpansion nil nil
-    ))
+  (cond-let-test--macroexpansion nil '(nil clause nil)
+    (cond-let
+      [[a nil]
+       [b 'shared]
+       [c nil]]
+      ([_(eq a c)]
+       [b 'clause]
+       (list a b c))
+      (b))
+
+    (catch ':cond-let1
+      (let ((a nil)
+            (b 'shared)
+            (c nil))
+        (cond-let--when-let
+            ((_ (eq a c))
+             (b 'clause))
+          (throw ':cond-let1 (list a b c)))
+        (let ((anon2 b))
+          (when anon2
+            (throw ':cond-let1 anon2))))))
+
+  (cond-let-test--macroexpansion nil 'shared
+    (cond-let
+      [[a 'shared]]
+      ([a 'clause]
+       [b nil]
+       (list a b))
+      ((eq a 'shared)
+       a))
+
+    (catch ':cond-let1
+      (let ((a 'shared))
+        (cond-let--when-let
+            ((a 'clause)
+             (b nil))
+          (throw ':cond-let1 (list a b)))
+        (when (eq a 'shared)
+          (throw ':cond-let1 a))))))
 
 ;;; And
 
