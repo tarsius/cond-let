@@ -144,6 +144,7 @@
       ([_(eq a c)]
        [b 'clause]
        (list a b c))
+      ((null t))
       (b))
 
     (catch ':cond-let1
@@ -154,9 +155,10 @@
             ((_ (eq a c))
              (b 'clause))
           (throw ':cond-let1 (list a b c)))
-        (let ((anon2 b))
+        (let ((anon2 (null t)))
           (when anon2
-            (throw ':cond-let1 anon2))))))
+            (throw ':cond-let1 anon2)))
+        b)))
 
   (cond-let-test--macroexpansion nil 'shared
     (cond-let

@@ -87,14 +87,14 @@
 ;;; Code:
 ;;; Cond
 
-(defun cond-let--prepare-clauses (tag when let clauses)
+(defun cond-let--prepare-clauses (tag sequential clauses)
   "Used by macros `cond-let*' and `cond-let'."
   (let (body)
     (dolist (clause (nreverse clauses))
       (cond
        ((vectorp clause)
         (setq body
-              `((,(if (length= clause 1) 'let let)
+              `((,(if (and sequential (length> clause 1)) 'let* 'let)
                  ,(mapcar (lambda (vec) (append vec nil)) clause)
                  ,@body))))
        ((let (varlist)
@@ -102,13 +102,22 @@
             (push (append (pop clause) nil) varlist))
           (push (cond
                  (varlist
-                  `(,(if (length= varlist 1) 'cond-let--when-let when)
+                  `(,(pcase (list (and body t)
+                                  (and sequential (length> varlist 1)))
+                       ('(t   t ) 'cond-let--when-let*)
+                       (`(t   ,_) 'cond-let--when-let)
+                       ('(nil t ) 'cond-let--and-let*)
+                       (`(nil ,_) 'cond-let--and-let))
                     ,(nreverse varlist)
-                    (throw ',tag ,(macroexp-progn clause))))
+                    ,(if body
+                         `(throw ',tag ,(macroexp-progn clause))
+                       (macroexp-progn clause))))
                  ((length= clause 1)
-                  (let ((a (gensym "anon")))
-                    `(let ((,a ,(car clause)))
-                       (when ,a (throw ',tag ,a)))))
+                  (if body
+                      (let ((a (gensym "anon")))
+                        `(let ((,a ,(car clause)))
+                           (when ,a (throw ',tag ,a))))
+                    (car clause)))
                  ((and (eq (car clause) t) (not body))
                   (macroexp-progn (cdr clause)))
                  (t
@@ -153,7 +162,7 @@ to the next clause."
                           (form body)])))
   (let ((tag (gensym ":cond-let*")))
     `(catch ',tag
-       ,@(cond-let--prepare-clauses tag 'cond-let--when-let* 'let* clauses))))
+       ,@(cond-let--prepare-clauses tag t clauses))))
 
 (defmacro cond-let (&rest clauses)
   "Try each clause until one succeeds.
@@ -188,7 +197,7 @@ next clause."
   (declare (indent 0) (debug cond-let))
   (let ((tag (gensym ":cond-let")))
     `(catch ',tag
-       ,@(cond-let--prepare-clauses tag 'cond-let--when-let 'let clauses))))
+       ,@(cond-let--prepare-clauses tag nil clauses))))
 
 ;;; Common
 
