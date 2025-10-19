@@ -109,6 +109,8 @@
                   (let ((a (gensym "anon")))
                     `(let ((,a ,(car clause)))
                        (when ,a (throw ',tag ,a)))))
+                 ((and (eq (car clause) t) (not body))
+                  (macroexp-progn (cdr clause)))
                  (t
                   `(when ,(pop clause)
                      (throw ',tag ,(macroexp-progn clause)))))

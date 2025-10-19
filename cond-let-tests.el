@@ -93,8 +93,7 @@
             ((e 5)
              (_ (> e (+ c d))))
           (throw ':cond-let*1 (progn (print e) e)))
-        (when t
-          (throw ':cond-let*1 (list c d))))))
+        (list c d))))
 
   (cond-let-test--macroexpansion nil '(2 3)
     (cond-let*
@@ -103,7 +102,10 @@
       [[b 2]]
       ([c 3]
        [_ (> 3 b)]
-       (list b c)))
+       (list b c))
+      (t
+       (message "4")
+       b))
 
     (catch ':cond-let*1
       (cond-let--when-let ((a nil))
@@ -112,7 +114,8 @@
         (cond-let--when-let*
             ((c 3)
              (_ (> 3 b)))
-          (throw ':cond-let*1 (list b c))))))
+          (throw ':cond-let*1 (list b c)))
+        (progn (message "4") b))))
 
   (cond-let-test--macroexpansion nil '(1 2 3)
     (cond-let*
