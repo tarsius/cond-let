@@ -437,9 +437,30 @@
     (let ((anon1 1))
       (when anon1 2))))
 
+(ert-deftest cond-let-test--105-expand--when$ ()
+  (cond-let-test--macroexpansion nil 3
+
+    (when$ (+ 0 1)
+      (+ $ 2))
+
+    (let (($ (+ 0 1)))
+      (when $
+        (+ $ 2))))
+
+  (cond-let-test--macroexpansion nil 4
+
+    (when$ (+ 0 1)
+      (cl-incf $)
+      (+ $ 2))
+
+    (let (($ (+ 0 1)))
+      (when $
+        (cl-incf $)
+        (+ $ 2)))))
+
 ;;; While
 
-(ert-deftest cond-let-test--111-expand--while-let* ()
+(ert-deftest cond-let-test--112-expand--while-let* ()
   (let ((n 5))
     (cond-let-test--macroexpansion nil nil
       (while-let* ((a (setq n (1- n)))
@@ -454,7 +475,7 @@
                 (print a)
               (throw ':while-let*2 nil))))))))
 
-(ert-deftest cond-let-test--112-expand--while-let ()
+(ert-deftest cond-let-test--113-expand--while-let ()
   (let ((n 5))
     (cond-let-test--macroexpansion nil nil
       (while-let ((a (setq n (1- n)))
@@ -479,6 +500,7 @@
 ;;   ("and>"      . "cond-let--and>")
 ;;   ("and-let"   . "cond-let--and-let")
 ;;   ("if-let"    . "cond-let--if-let")
+;;   ("when$"     . "cond-let--when$")
 ;;   ("when-let"  . "cond-let--when-let")
 ;;   ("while-let" . "cond-let--while-let"))
 ;; End:

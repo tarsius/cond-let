@@ -441,6 +441,21 @@ and return nil.
               (when ,lastvar
                 ,bodyform ,@body))))))
 
+(defmacro cond-let--when$ (varform bodyform &rest body)
+  "Bind variable `$' to value of VARFORM and conditionally evaluate BODY.
+
+If VARFORM yields a non-nil value, bind the symbol `$' to that value,
+evaluate BODY with that binding in effect, and return the value of the
+last form.  If VARFORM yields nil, do not evaluate BODY, and return nil.
+BODY must be one or more expressions.  If VARLIST is empty, do nothing
+and return nil.
+
+\(fn VARLIST BODY...)"
+  (declare (debug (form form)))
+  `(let (($ ,varform))
+     (when $
+       ,bodyform ,@body)))
+
 ;;; While
 
 (defmacro cond-let--while-let* (varlist &rest body)
