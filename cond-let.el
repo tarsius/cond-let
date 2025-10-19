@@ -90,31 +90,29 @@
 (defun cond-let--prepare-clauses (tag when let clauses)
   "Used by macros `cond-let*' and `cond-let'."
   (let (body)
-    (setq clauses (nreverse clauses))
-    (while clauses
-      (let ((clause (pop clauses)))
-        (cond
-         ((vectorp clause)
-          (setq body
-                `((,(if (length= clause 1) 'let let)
-                   ,(mapcar (lambda (vec) (append vec nil)) clause)
-                   ,@body))))
-         ((let (varlist)
-            (while (vectorp (car clause))
-              (push (append (pop clause) nil) varlist))
-            (push (cond
-                   (varlist
-                    `(,(if (length= varlist 1) 'cond-let--when-let when)
-                      ,(nreverse varlist)
-                      (throw ',tag ,(macroexp-progn clause))))
-                   ((length= clause 1)
-                    (let ((a (gensym "anon")))
-                      `(let ((,a ,(car clause)))
-                         (when ,a (throw ',tag ,a)))))
-                   (t
-                    `(when ,(pop clause)
-                       (throw ',tag ,(macroexp-progn clause)))))
-                  body))))))
+    (dolist (clause (nreverse clauses))
+      (cond
+       ((vectorp clause)
+        (setq body
+              `((,(if (length= clause 1) 'let let)
+                 ,(mapcar (lambda (vec) (append vec nil)) clause)
+                 ,@body))))
+       ((let (varlist)
+          (while (vectorp (car clause))
+            (push (append (pop clause) nil) varlist))
+          (push (cond
+                 (varlist
+                  `(,(if (length= varlist 1) 'cond-let--when-let when)
+                    ,(nreverse varlist)
+                    (throw ',tag ,(macroexp-progn clause))))
+                 ((length= clause 1)
+                  (let ((a (gensym "anon")))
+                    `(let ((,a ,(car clause)))
+                       (when ,a (throw ',tag ,a)))))
+                 (t
+                  `(when ,(pop clause)
+                     (throw ',tag ,(macroexp-progn clause)))))
+                body)))))
     body))
 
 (defmacro cond-let* (&rest clauses)
