@@ -33,10 +33,11 @@
 ;; Breaking changes are possible!
 
 ;; Emacs provides the binding conditionals `if-let', `if-let*',
-;; `when-let', `when-let*', `and-let*' and `while-let'.
+;; `when-let', `when-let*', `and-let*' and `while-let'.  Starting
+;; with Emacs 31 it also provides `cond-let*'.
 
-;; This package implements the missing `and-let' and `while-let*',
-;; and the original `cond-let', `cond-let*', `and$' and `and>'.
+;; This package implements the missing `and-let', `while-let*' and
+;; `cond-let'.  It also implements the original `and$' and `and>'.
 
 ;; This package additionally provides more consistent and improved
 ;; implementations of the binding conditionals already provided by
@@ -44,9 +45,15 @@
 ;; implementations; this can optionally be done in the context of
 ;; an individual library, as described below.
 
-;; `cond-let' and `cond-let*' are provided exactly under these names.
-;; The names of all other macros implemented by this package begin
-;; with `cond-let--', the package's prefix for private symbol.
+;; The names of all macros implemented by this package begin with
+;; `cond-let--', the package's prefix for private symbol.
+
+;; (In the initial release of this package `cond-let' and `cond-let*'
+;; were provided exactly under these names (without the `cond-let--'
+;; prefix), because these forms did not exist in Emacs at that time.
+;; Later an incompatible implementation of `cond-let*' was added to
+;; Emacs, forcing us to rename our implementation.  To avoid having
+;; a single un-prefixed form, we also add the prefix to `cond-let'.)
 
 ;; Users of this package are not expected to use these unwieldy
 ;; names.  Instead one should use Emacs' shorthand feature to use
@@ -59,6 +66,7 @@
 ;;   ("and$"      . "cond-let--and$")
 ;;   ("and>"      . "cond-let--and>")
 ;;   ("and-let"   . "cond-let--and-let")
+;;   ("cond-let"  . "cond-let--cond-let")
 ;;   ("if-let"    . "cond-let--if-let")
 ;;   ("when-let"  . "cond-let--when-let")
 ;;   ("while-let" . "cond-let--while-let"))
@@ -126,7 +134,7 @@
                 body)))))
     body))
 
-(defmacro cond-let* (&rest clauses)
+(defmacro cond-let--cond-let* (&rest clauses)
   "Try each clause until one succeeds.
 
 Each clause has one of these forms:
@@ -164,7 +172,7 @@ to the next clause."
     `(catch ',tag
        ,@(cond-let--prepare-clauses tag t clauses))))
 
-(defmacro cond-let (&rest clauses)
+(defmacro cond-let--cond-let (&rest clauses)
   "Try each clause until one succeeds.
 
 Each clause has one of these forms:
