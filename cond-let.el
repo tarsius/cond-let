@@ -194,7 +194,7 @@ remaining clauses and binding vectors.  Evaluate all VALUEFORMs before
 binding their respective SYMBOLs.  Unlike for the previous form, bind
 all SYMBOLs, even if a VALUEFORM yields nil.  Always proceed to the
 next clause."
-  (declare (indent 0) (debug cond-let))
+  (declare (indent 0) (debug cond-let*))
   (let ((tag (gensym ":cond-let")))
     `(catch ',tag
        ,@(cond-let--prepare-clauses tag nil clauses))))
