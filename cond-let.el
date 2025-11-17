@@ -92,38 +92,38 @@
   (let (body)
     (dolist (clause (nreverse clauses))
       (cond
-       ((vectorp clause)
-        (setq body
-              `((,(if (and sequential (length> clause 1)) 'let* 'let)
-                 ,(mapcar (lambda (vec) (append vec nil)) clause)
-                 ,@body))))
-       ((let (varlist)
-          (while (vectorp (car clause))
-            (push (append (pop clause) nil) varlist))
-          (push (cond
-                 (varlist
-                  `(,(pcase (list (and body t)
-                                  (and sequential (length> varlist 1)))
-                       ('(t   t ) 'cond-let--when-let*)
-                       (`(t   ,_) 'cond-let--when-let)
-                       ('(nil t ) 'cond-let--and-let*)
-                       (`(nil ,_) 'cond-let--and-let))
-                    ,(nreverse varlist)
-                    ,(if body
-                         `(throw ',tag ,(macroexp-progn clause))
-                       (macroexp-progn clause))))
-                 ((length= clause 1)
-                  (if body
-                      (let ((a (gensym "anon")))
-                        `(let ((,a ,(car clause)))
-                           (when ,a (throw ',tag ,a))))
-                    (car clause)))
-                 ((and (eq (car clause) t) (not body))
-                  (macroexp-progn (cdr clause)))
-                 (t
-                  `(when ,(pop clause)
-                     (throw ',tag ,(macroexp-progn clause)))))
-                body)))))
+        ((vectorp clause)
+         (setq body
+               `((,(if (and sequential (length> clause 1)) 'let* 'let)
+                  ,(mapcar (lambda (vec) (append vec nil)) clause)
+                  ,@body))))
+        ((let (varlist)
+           (while (vectorp (car clause))
+             (push (append (pop clause) nil) varlist))
+           (push (cond
+                   (varlist
+                    `(,(pcase (list (and body t)
+                                    (and sequential (length> varlist 1)))
+                         ('(t   t ) 'cond-let--when-let*)
+                         (`(t   ,_) 'cond-let--when-let)
+                         ('(nil t ) 'cond-let--and-let*)
+                         (`(nil ,_) 'cond-let--and-let))
+                      ,(nreverse varlist)
+                      ,(if body
+                           `(throw ',tag ,(macroexp-progn clause))
+                         (macroexp-progn clause))))
+                   ((length= clause 1)
+                    (if body
+                        (let ((a (gensym "anon")))
+                          `(let ((,a ,(car clause)))
+                             (when ,a (throw ',tag ,a))))
+                      (car clause)))
+                   ((and (eq (car clause) t) (not body))
+                    (macroexp-progn (cdr clause)))
+                   (t
+                    `(when ,(pop clause)
+                       (throw ',tag ,(macroexp-progn clause)))))
+                 body)))))
     body))
 
 (defmacro cond-let* (&rest clauses)
@@ -528,6 +528,89 @@ BODY can be one or more expressions.
   "Highlight `$' using `font-lock-variable-name-face'.
 To add these keywords, add this to your configuration:
 \(font-lock-add-keywords \\='emacs-lisp-mode cond-let-font-lock-keywords t)")
+
+;;; Unorthodox indentation
+
+(defvar cond-let--lisp-indent-function--normal-indent nil
+  "Value of `current-column' at beginning of `lisp-indent-function'.
+See also `cond-let--lisp-indent-function'.")
+
+(defun cond-let--lisp-indent-function (fn indent-point state)
+  "Remember `current-column' for use by `lisp-indent-function' property.
+
+When the function `lisp-indent-function' calls `lisp-indent-specform'
+directly, it passes along the value `current-column' had initially, but
+when the function stored in symbol's `lisp-indent-function' property is
+called, then this useful value is withheld.
+
+This advice binds `cond-let--lisp-indent-function--normal-indent' to
+the same value, so that it can be used in any `lisp-indent-function'."
+  (let ((cond-let--lisp-indent-function--normal-indent (current-column)))
+    (funcall fn indent-point state)))
+
+(advice-add 'lisp-indent-function :around #'cond-let--lisp-indent-function)
+
+(defmacro cond-let-define-local-lisp-indent-variable (symbol prefix)
+  "Define a variable to change indention of SYMBOL in some files.
+
+Define the buffer-local variable `PREFIX-local-lisp-indent@SYMBOL' and
+advise the value stored in SYMBOL's `lisp-indent-function' property to
+respect the local value, if any.  The same values are valid for this
+variable as for this property, but only nil, `defun' and integers are
+considered safe.
+
+In buffers where the variable has a local value, that is used instead
+of the value of the property.  In other buffers SYMBOL is intended as
+it would be without this advice.
+
+Cond-Let itself defines two such variables:
+`cond-let-local-lisp-indent@cond' for `cond', and
+`cond-let-local-lisp-indent@interactive' for `interactive'.
+In both cases I recommend using 0 instead of nil, the default."
+  (let ((var (intern (format "%s-local-lisp-indent@%s" prefix symbol))))
+    `(progn
+       (defvar-local ,var nil
+         ,(format "Local `lisp-indent-function' for `%s'.
+See `cond-let-define-local-lisp-indent-variable'." var))
+       (put ',var 'definition-name ',symbol)
+       (put ',var 'safe-local-variable #'cond-let--safe-lisp-indent-p)
+       (put ',var 'permanent-local t)
+       (add-function :around (get ',symbol 'lisp-indent-function)
+                     (lambda (global indent-point state)
+                       (cond-let--handle-lisp-indent
+                        ',var ,var global indent-point state
+                        cond-let--lisp-indent-function--normal-indent))
+                     '((name . "cond-let--handle-lisp-indent"))))))
+
+(defun cond-let--handle-lisp-indent
+    (variable local global indent-point state normal-indent)
+  (if (local-variable-p variable)
+      (cond
+        ((eq local 'defun)
+         (lisp-indent-defform state indent-point))
+        ((integerp local)
+         (lisp-indent-specform local state indent-point normal-indent))
+        ((functionp local)
+         (funcall local indent-point state)))
+    (cond
+      ((eq global 'defun)
+       (lisp-indent-defform state indent-point))
+      ((integerp global)
+       (lisp-indent-specform global state indent-point normal-indent))
+      (global
+       (funcall global indent-point state)))))
+
+(defun cond-let--safe-lisp-indent-p (value)
+  (or (null value)
+      (eq value 'defun)
+      (integerp value)))
+
+(cond-let-define-local-lisp-indent-variable interactive cond-let)
+(cond-let-define-local-lisp-indent-variable cond cond-let)
+
+;; Local Variables:
+;; cond-let-local-lisp-indent@cond: 0
+;; End:
 
 (provide 'cond-let)
 ;;; cond-let.el ends here
