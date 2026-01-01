@@ -92,38 +92,38 @@
   (let (body)
     (dolist (clause (nreverse clauses))
       (cond
-       ((vectorp clause)
-        (setq body
-              `((,(if (and sequential (length> clause 1)) 'let* 'let)
-                 ,(mapcar (lambda (vec) (append vec nil)) clause)
-                 ,@body))))
-       ((let (varlist)
-          (while (vectorp (car clause))
-            (push (append (pop clause) nil) varlist))
-          (push (cond
-                 (varlist
-                  `(,(pcase (list (and body t)
-                                  (and sequential (length> varlist 1)))
-                       ('(t   t ) 'cond-let--when-let*)
-                       (`(t   ,_) 'cond-let--when-let)
-                       ('(nil t ) 'cond-let--and-let*)
-                       (`(nil ,_) 'cond-let--and-let))
-                    ,(nreverse varlist)
-                    ,(if body
-                         `(throw ',tag ,(macroexp-progn clause))
-                       (macroexp-progn clause))))
-                 ((length= clause 1)
-                  (if body
-                      (let ((a (gensym "anon")))
-                        `(let ((,a ,(car clause)))
-                           (when ,a (throw ',tag ,a))))
-                    (car clause)))
-                 ((and (eq (car clause) t) (not body))
-                  (macroexp-progn (cdr clause)))
-                 (t
-                  `(when ,(pop clause)
-                     (throw ',tag ,(macroexp-progn clause)))))
-                body)))))
+        ((vectorp clause)
+         (setq body
+               `((,(if (and sequential (length> clause 1)) 'let* 'let)
+                  ,(mapcar (lambda (vec) (append vec nil)) clause)
+                  ,@body))))
+        ((let (varlist)
+           (while (vectorp (car clause))
+             (push (append (pop clause) nil) varlist))
+           (push (cond
+                   (varlist
+                    `(,(pcase (list (and body t)
+                                    (and sequential (length> varlist 1)))
+                         ('(t   t ) 'cond-let--when-let*)
+                         (`(t   ,_) 'cond-let--when-let)
+                         ('(nil t ) 'cond-let--and-let*)
+                         (`(nil ,_) 'cond-let--and-let))
+                      ,(nreverse varlist)
+                      ,(if body
+                           `(throw ',tag ,(macroexp-progn clause))
+                         (macroexp-progn clause))))
+                   ((length= clause 1)
+                    (if body
+                        (let ((a (gensym "anon")))
+                          `(let ((,a ,(car clause)))
+                             (when ,a (throw ',tag ,a))))
+                      (car clause)))
+                   ((and (eq (car clause) t) (not body))
+                    (macroexp-progn (cdr clause)))
+                   (t
+                    `(when ,(pop clause)
+                       (throw ',tag ,(macroexp-progn clause)))))
+                 body)))))
     body))
 
 (defmacro cond-let* (&rest clauses)
