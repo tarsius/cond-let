@@ -1,6 +1,6 @@
 ;;; cond-let-tests.el --- Tests for Cond-Let  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2025 Jonas Bernoulli
+;; Copyright (C) 2025-2026 Jonas Bernoulli
 
 ;; Authors: Jonas Bernoulli <emacs.cond-let@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/tarsius/cond-let

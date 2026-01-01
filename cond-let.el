@@ -1,6 +1,6 @@
 ;;; cond-let.el --- Additional and improved binding conditionals  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2025 Jonas Bernoulli
+;; Copyright (C) 2025-2026 Jonas Bernoulli
 
 ;; May contain traces of Emacs, which is
 ;; Copyright (C) 1985-2025 Free Software Foundation, Inc.
