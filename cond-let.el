@@ -451,7 +451,7 @@ BODY must be one or more expressions.  If VARLIST is empty, do nothing
 and return nil.
 
 \(fn VARLIST BODY...)"
-  (declare (debug (form form)))
+  (declare (indent 1) (debug (form form)))
   `(let (($ ,varform))
      (when $
        ,bodyform ,@body)))
