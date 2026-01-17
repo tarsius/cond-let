@@ -1,4 +1,4 @@
-* Cond-Let — Additional and improved binding conditionals
+** Cond-Let — Additional and improved binding conditionals
 
 *This is an ALPHA release!*
 *Breaking changes are possible!*
