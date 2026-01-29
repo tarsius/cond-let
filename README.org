@@ -2,7 +2,7 @@
 
 #+begin_quote
 [!WARNING]
-This is an BETA release!
+This is a BETA release!
 Breaking changes are unlikely but still possible!
 See https://github.com/tarsius/cond-let/wiki.
 #+end_quote

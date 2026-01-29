@@ -29,7 +29,7 @@
 
 ;;; Commentary:
 
-;; This is an ALPHA release!
+;; This is a BETA release!
 ;; Breaking changes are possible!
 
 ;; Emacs provides the binding conditionals `if-let', `if-let*',
