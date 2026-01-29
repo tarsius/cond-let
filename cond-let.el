@@ -30,7 +30,8 @@
 ;;; Commentary:
 
 ;; This is a BETA release!
-;; Breaking changes are possible!
+;; Breaking changes are unlikely but still possible!
+;; See https://github.com/tarsius/cond-let/wiki.
 
 ;; Emacs provides the binding conditionals `if-let', `if-let*',
 ;; `when-let', `when-let*', `and-let*' and `while-let'.
