@@ -9,7 +9,7 @@
 ;; Homepage: https://github.com/tarsius/cond-let
 ;; Keywords: extensions
 
-;; Package-Version: 0.2.2
+;; Package-Version: 1.0.0
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
@@ -28,10 +28,6 @@
 ;; along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-
-;; This is a BETA release!
-;; Breaking changes are unlikely but still possible!
-;; See https://github.com/tarsius/cond-let/wiki.
 
 ;; Emacs provides the binding conditionals `if-let', `if-let*',
 ;; `when-let', `when-let*', `and-let*' and `while-let'.
