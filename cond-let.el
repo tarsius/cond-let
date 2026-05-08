@@ -5,7 +5,7 @@
 ;; May contain traces of Emacs, which is
 ;; Copyright (C) 1985-2025 Free Software Foundation, Inc.
 
-;; Authors: Jonas Bernoulli <emacs.cond-let@jonas.bernoulli.dev>
+;; Author: Jonas Bernoulli <emacs.cond-let@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/tarsius/cond-let
 ;; Keywords: extensions
 

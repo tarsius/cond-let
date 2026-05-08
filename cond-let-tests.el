@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2025-2026 Jonas Bernoulli
 
-;; Authors: Jonas Bernoulli <emacs.cond-let@jonas.bernoulli.dev>
+;; Author: Jonas Bernoulli <emacs.cond-let@jonas.bernoulli.dev>
 ;; Homepage: https://github.com/tarsius/cond-let
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
