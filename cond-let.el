@@ -193,7 +193,8 @@ remaining clauses and binding vectors.  Evaluate all VALUEFORMs before
 binding their respective SYMBOLs.  Unlike for the previous form, bind
 all SYMBOLs, even if a VALUEFORM yields nil.  Always proceed to the
 next clause."
-  (declare (indent 0) (debug cond-let*))
+  (declare (indent 0)
+           (debug cond-let*))
   (let ((tag (gensym ":cond-let")))
     `(catch ',tag
        ,@(cond-let--prepare-clauses tag nil clauses))))
@@ -284,7 +285,8 @@ nil, and evaluate neither the remaining VALUEFORMs nor BODYFORM.  If all
 VALUEFORMs yield non-nil, evaluate BODYFORM with the bindings in effect,
 and return its value; or if there is no BODYFORM, the value of the last
 VALUEFORM."
-  (declare (indent 1) (debug cond-let--and-let*))
+  (declare (indent 1)
+           (debug cond-let--and-let*))
   (pcase-let ((`(,anon ,set ,bind ,lastvar)
                (cond-let--prepare-varforms varlist)))
     (cond (anon
@@ -375,7 +377,8 @@ value of the last form; or if there are no ELSE forms return nil.  The
 bindings from VARLIST do _not_ extend to the ELSE forms.
 
 \(fn VARLIST THEN [ELSE...])"
-  (declare (indent 2) (debug cond-let--if-let*))
+  (declare (indent 2)
+           (debug cond-let--if-let*))
   (pcase-let* ((`(,anon ,set ,bind ,_)
                 (cond-let--prepare-varforms varlist t))
                (set (if (length= set 1) (car set) (cons 'and set))))
@@ -429,7 +432,8 @@ BODY must be one or more expressions.  If VARLIST is empty, do nothing
 and return nil.
 
 \(fn VARLIST BODY...)"
-  (declare (indent 1) (debug cond-let--when-let*))
+  (declare (indent 1)
+           (debug cond-let--when-let*))
   (pcase-let ((`(,anon ,set ,bind ,lastvar)
                (cond-let--prepare-varforms varlist)))
     (cond (anon
