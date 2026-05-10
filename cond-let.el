@@ -476,7 +476,8 @@ nor the BODY forms, and instead return, always yielding nil.
 BODY can be zero or more expressions.
 
 \(fn VARLIST [BODY...])"
-  (declare (indent 1) (debug cond-let--if-let*))
+  (declare (indent 1)
+           (debug ((&rest (symbolp form)) body)))
   (pcase-let ((`(,varlist ,lastvar)
                (cond-let--prepare-varlist varlist))
               (tag (gensym ":while-let*")))
