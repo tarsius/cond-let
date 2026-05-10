@@ -1,4 +1,8 @@
 # -*- mode: org -*-
+* v1.1.0    UNRELEASED
+
+- Declared indentation of ~and$~ and ~and>~.
+
 * v1.0.0    2026-05-01
 
 First stable release.

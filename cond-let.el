@@ -305,7 +305,8 @@ If VARFORM yields a non-nil value, bind the symbol `$' to that value,
 evaluate BODYFORM with that binding in effect, and return the value of
 BODYFORM.  If VARFORM yields nil, do not evaluate BODYFORM, and return
 nil."
-  (declare (debug (form form)))
+  (declare (indent 0)
+           (debug (form form)))
   `(let (($ ,varform))
      (and $ ,bodyform)))
 
@@ -319,7 +320,8 @@ nil, then return nil without evaluate the remaining FORMs.  If all
 FORMs yield non-nil, return the value of the last FORM.
 
 \(fn FORM FORM...)"
-  (declare (debug (form form body)))
+  (declare (indent 0)
+           (debug (form form body)))
   `(,(if forms 'let* 'let)
     (($ ,form)
      ,@(and forms
