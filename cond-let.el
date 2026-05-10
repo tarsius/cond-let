@@ -310,7 +310,7 @@ nil."
      (and $ ,bodyform)))
 
 (defmacro cond-let--and> (form form2 &rest forms)
-  "Bind variables according to each VARFORM until one of them yields nil.
+  "Bind variables according to each FORM until one of them yields nil.
 
 Evaluate the first FORM and if that yields a non-nil value, bind the
 symbol `$' to that value, and evaluate the next FORM with that binding
