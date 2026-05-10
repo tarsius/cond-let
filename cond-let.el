@@ -32,9 +32,9 @@
 ;; Emacs provides the binding conditionals `if-let', `if-let*',
 ;; `when-let', `when-let*', `and-let*' and `while-let'.
 
-;; This package implements the missing `and-let' and `while-let*',
-;; and the original `cond-let', `cond-let*', `when$', `and$' and
-;; `and>'.
+;; This package implements the missing `and-let' and `while-let*';
+;; and the original `cond-let', `cond-let*', `when$', `and$', `and>'
+;; and `thread$'.
 
 ;; This package additionally provides more consistent and improved
 ;; implementations of the binding conditionals already provided by
@@ -58,6 +58,7 @@
 ;;   ("and>"      . "cond-let--and>")
 ;;   ("and-let"   . "cond-let--and-let")
 ;;   ("if-let"    . "cond-let--if-let")
+;;   ("thread$"   . "cond-let--thread$")
 ;;   ("when$"     . "cond-let--when$")
 ;;   ("when-let"  . "cond-let--when-let")
 ;;   ("while-let" . "cond-let--while-let"))
@@ -71,8 +72,8 @@
 ;; Due to limitations of the shorthand implementation this has to be
 ;; done for each individual library.  "dir-locals.el" cannot be used.
 
-;; If you use `when$', `and$' and `and>', you might want to add this
-;; to your configuration:
+;; If you use `when$', `and$', `and>' and `thread$', you might want
+;; to add this to your configuration:
 
 ;;   (with-eval-after-load 'cond-let
 ;;     (font-lock-add-keywords 'emacs-lisp-mode
@@ -333,6 +334,27 @@ FORMs yield non-nil, return the value of the last FORM.
     (and $
          ,(or (car (last forms))
               form2))))
+
+;;; Thread
+
+(defmacro cond-let--thread$ (form form2 &rest forms)
+  "Bind variable `$' to value of nth FORM before evaluating nth+1 FORM.
+
+Evaluate the first FORM and bind the symbol `$' to its value.
+Then evaluate the next FORM with that binding in effect.  Repeat this
+process with subsequent FORMs, and return the value of the last FORM.
+
+\(fn FORM FORM...)"
+  (declare (indent 0)
+           (debug (form form body)))
+  `(,(if forms 'let* 'let)
+    (($ ,form)
+     ,@(and forms
+            (mapcar (lambda (form)
+                      `($ ,form))
+                    (cons form2 (butlast forms)))))
+    ,(or (car (last forms))
+         form2)))
 
 ;;; If
 

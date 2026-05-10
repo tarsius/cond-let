@@ -296,9 +296,30 @@
       (and $
            (+ $ 2)))))
 
+;;; Thread
+
+(ert-deftest cond-let-test--107-expand--thread$ ()
+  (cond-let-test--macroexpansion nil 6
+
+    (thread$ (+ 0 1)
+             (+ $ 2)
+             (+ $ 3))
+
+    (let* (($ (+ 0 1))
+           ($ (+ $ 2)))
+      (+ $ 3)))
+
+  (cond-let-test--macroexpansion nil 4
+
+    (thread$ (+ 1 1)
+             (+ $ 2))
+
+    (let (($ (+ 1 1)))
+      (+ $ 2))))
+
 ;;; If
 
-(ert-deftest cond-let-test--107-expand--if-let* ()
+(ert-deftest cond-let-test--108-expand--if-let* ()
   (cond-let-test--macroexpansion nil '(1 2)
 
     (if-let* ((a 1)
@@ -315,7 +336,7 @@
       (print 3)
       4)))
 
-(ert-deftest cond-let-test--108-expand--if-let ()
+(ert-deftest cond-let-test--109-expand--if-let ()
   (cond-let-test--macroexpansion nil '(1 2)
 
     (if-let ((a 1)
@@ -345,7 +366,7 @@
 
 ;;; When
 
-(ert-deftest cond-let-test--109-expand--when-let* ()
+(ert-deftest cond-let-test--110-expand--when-let* ()
   (cond-let-test--macroexpansion nil 2
 
     (when-let* ((_ t)
@@ -383,7 +404,7 @@
       (when anon1
         2))))
 
-(ert-deftest cond-let-test--110-expand--when-let ()
+(ert-deftest cond-let-test--111-expand--when-let ()
   (cond-let-test--macroexpansion nil 2
 
     (when-let ((a 1)
@@ -437,7 +458,7 @@
     (let ((anon1 1))
       (when anon1 2))))
 
-(ert-deftest cond-let-test--105-expand--when$ ()
+(ert-deftest cond-let-test--112-expand--when$ ()
   (cond-let-test--macroexpansion nil 3
 
     (when$ (+ 0 1)
@@ -460,7 +481,7 @@
 
 ;;; While
 
-(ert-deftest cond-let-test--112-expand--while-let* ()
+(ert-deftest cond-let-test--113-expand--while-let* ()
   (let ((n 5))
     (cond-let-test--macroexpansion nil nil
       (while-let* ((a (setq n (1- n)))
@@ -475,7 +496,7 @@
                 (print a)
               (throw ':while-let*2 nil))))))))
 
-(ert-deftest cond-let-test--113-expand--while-let ()
+(ert-deftest cond-let-test--114-expand--while-let ()
   (let ((n 5))
     (cond-let-test--macroexpansion nil nil
       (while-let ((a (setq n (1- n)))
@@ -500,6 +521,7 @@
 ;;   ("and>"      . "cond-let--and>")
 ;;   ("and-let"   . "cond-let--and-let")
 ;;   ("if-let"    . "cond-let--if-let")
+;;   ("thread$"   . "cond-let--thread$")
 ;;   ("when$"     . "cond-let--when$")
 ;;   ("when-let"  . "cond-let--when-let")
 ;;   ("while-let" . "cond-let--while-let"))
