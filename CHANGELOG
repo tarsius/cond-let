@@ -3,6 +3,8 @@
 
 - Declared indentation of ~and$~ and ~and>~.
 
+- Fixed debug declaration of ~when$~.
+
 * v1.0.0    2026-05-01
 
 First stable release.
