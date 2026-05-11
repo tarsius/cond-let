@@ -33,8 +33,8 @@
 ;; `when-let', `when-let*', `and-let*' and `while-let'.
 
 ;; This package implements the missing `and-let' and `while-let*';
-;; and the original `cond-let', `cond-let*', `when$', `and$', `and>'
-;; and `thread$'.
+;; and the original `cond-let', `cond-let*', `when$', `and$' and
+;; `thread$'.
 
 ;; This package additionally provides more consistent and improved
 ;; implementations of the binding conditionals already provided by
@@ -55,7 +55,6 @@
 ;; Local Variables:
 ;; read-symbol-shorthands: (
 ;;   ("and$"      . "cond-let--and$")
-;;   ("and>"      . "cond-let--and>")
 ;;   ("and-let"   . "cond-let--and-let")
 ;;   ("if-let"    . "cond-let--if-let")
 ;;   ("thread$"   . "cond-let--thread$")
@@ -72,8 +71,8 @@
 ;; Due to limitations of the shorthand implementation this has to be
 ;; done for each individual library.  "dir-locals.el" cannot be used.
 
-;; If you use `when$', `and$', `and>' and `thread$', you might want
-;; to add this to your configuration:
+;; If you use `when$', `and$' and `thread$', you might want to add
+;; this to your configuration:
 
 ;;   (with-eval-after-load 'cond-let
 ;;     (font-lock-add-keywords 'emacs-lisp-mode
@@ -301,19 +300,9 @@ VALUEFORM."
                    `(and ,lastvar ,bodyform)
                  lastvar))))))
 
-(defmacro cond-let--and$ (varform bodyform)
-  "Bind variable `$' to value of VARFORM and conditionally evaluate BODYFORM.
+;;; Thread
 
-If VARFORM yields a non-nil value, bind the symbol `$' to that value,
-evaluate BODYFORM with that binding in effect, and return the value of
-BODYFORM.  If VARFORM yields nil, do not evaluate BODYFORM, and return
-nil."
-  (declare (indent 0)
-           (debug (form form)))
-  `(let (($ ,varform))
-     (and $ ,bodyform)))
-
-(defmacro cond-let--and> (form form2 &rest forms)
+(defmacro cond-let--and$ (form form2 &rest forms)
   "Bind variables according to each FORM until one of them yields nil.
 
 Evaluate the first FORM and if that yields a non-nil value, bind the
@@ -334,8 +323,6 @@ FORMs yield non-nil, return the value of the last FORM.
     (and $
          ,(or (car (last forms))
               form2))))
-
-;;; Thread
 
 (defmacro cond-let--thread$ (form form2 &rest forms)
   "Bind variable `$' to value of nth FORM before evaluating nth+1 FORM.
@@ -558,6 +545,19 @@ BODY can be one or more expressions.
   "Highlight `$' using `font-lock-variable-name-face'.
 To add these keywords, add this to your configuration:
 \(font-lock-add-keywords \\='emacs-lisp-mode cond-let-font-lock-keywords t)")
+
+;;; Compatibility
+
+(defalias 'cond-let--and> #'cond-let--and$
+  "Instead of this alias, use `cond-let--and$' via `and$' shorthand.
+
+This alias will likely be declared obsolete in 2027.  If you would like
+to continue to use it, please get in contact before then.  This alias
+might eventually be removed altogether; again subject to user feedback.
+
+If you do not care about the symbol `cond-let--and>', but want to keep
+using the respective `and>' shorthand, you can future-proof that now,
+by changing the shorthand definition to (\"and>\" . \"cond-let--and$\").")
 
 (provide 'cond-let)
 ;;; cond-let.el ends here

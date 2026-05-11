@@ -265,13 +265,26 @@
     (let ((anon1 1))
       (and anon1 2))))
 
+;;; Thread
+
 (ert-deftest cond-let-test--105-expand--and$ ()
   (cond-let-test--macroexpansion nil 3
 
     (and$ (+ 0 1)
+          (+ $ 2)
+          (+ $ 3))
+
+    (let* (($ (+ 0 1))
+           ($ (and $ (+ $ 2))))
+      (and $
+           (+ $ 3))))
+
+  (cond-let-test--macroexpansion nil 4
+
+    (and$ (+ 1 1)
           (+ $ 2))
 
-    (let (($ (+ 0 1)))
+    (let (($ (+ 1 1)))
       (and $
            (+ $ 2)))))
 
@@ -295,8 +308,6 @@
     (let (($ (+ 1 1)))
       (and $
            (+ $ 2)))))
-
-;;; Thread
 
 (ert-deftest cond-let-test--107-expand--thread$ ()
   (cond-let-test--macroexpansion nil 6
