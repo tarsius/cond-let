@@ -468,7 +468,7 @@ last form.  If VARFORM yields nil, do not evaluate BODY, and return nil.
 BODY must be one or more expressions.  If VARLIST is empty, do nothing
 and return nil.
 
-\(fn VARLIST BODY...)"
+\(fn VARFORM BODY...)"
   (declare (indent 1)
            (debug t))
   `(let (($ ,varform))
