@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-* v1.1.0    UNRELEASED
+* v1.1.0    2026-05-11
 
 - Added new macro ~thread$~.  d87c492
 
