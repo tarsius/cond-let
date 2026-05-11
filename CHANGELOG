@@ -1,7 +1,8 @@
 # -*- mode: org -*-
-* v1.1.0    UNRELEASED
+* v1.1.1    2026-05-11
 
 - Reverted accidental change to ~when$~'s indentation declaration.
+  6a133d7
 
 * v1.1.0    2026-05-11
 
