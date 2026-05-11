@@ -1,4 +1,8 @@
 # -*- mode: org -*-
+* v1.1.0    UNRELEASED
+
+- Reverted accidental change to ~when$~'s indentation declaration.
+
 * v1.1.0    2026-05-11
 
 - Added new macro ~thread$~.  d87c492
