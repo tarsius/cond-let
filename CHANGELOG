@@ -1,11 +1,15 @@
 # -*- mode: org -*-
 * v1.1.0    UNRELEASED
 
-- Declared indentation of ~and$~ and ~and>~.
+- Added new macro ~thread$~.  d87c492
 
-- Fixed debug declaration of ~when$~ and ~while-let*~.
+- Macro ~and$~ now accepts more than two arguments, like ~and>~ already
+  did.  ~and>~ is now an alias for ~and$~.  Please see its docstring if
+  you would like to keep using it.  ee63a74
 
-- Added new macro ~thread$~.
+- Fixed debug declaration of ~when$~ and ~while-let*~.  903a5e3, 680cd26
+
+- Added indentation declaration for ~and$~.  93768a2
 
 * v1.0.0    2026-05-01
 
