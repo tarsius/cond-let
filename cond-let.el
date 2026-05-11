@@ -317,7 +317,7 @@ FORMs yield non-nil, return the value of the last FORM.
 
 \(fn FORM FORM...)"
   (declare (indent 0)
-           (debug (form form body)))
+           (debug t))
   `(,(if forms 'let* 'let)
     (($ ,form)
      ,@(and forms
@@ -337,7 +337,7 @@ process with subsequent FORMs, and return the value of the last FORM.
 
 \(fn FORM FORM...)"
   (declare (indent 0)
-           (debug (form form body)))
+           (debug t))
   `(,(if forms 'let* 'let)
     (($ ,form)
      ,@(and forms
@@ -469,8 +469,8 @@ BODY must be one or more expressions.  If VARLIST is empty, do nothing
 and return nil.
 
 \(fn VARLIST BODY...)"
-  (declare (indent 1)
-           (debug (form form body)))
+  (declare (indent 0)
+           (debug t))
   `(let (($ ,varform))
      (when $
        ,bodyform ,@body)))
