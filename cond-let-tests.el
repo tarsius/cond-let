@@ -268,7 +268,7 @@
 ;;; Thread
 
 (ert-deftest cond-let-test--105-expand--and$ ()
-  (cond-let-test--macroexpansion nil 3
+  (cond-let-test--macroexpansion nil 6
 
     (and$ (+ 0 1)
           (+ $ 2)
