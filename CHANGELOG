@@ -1,4 +1,8 @@
 # -*- mode: org -*-
+* v1.1.2    2026-06-01
+
+- Fix a test pasto and a docstring typo.
+
 * v1.1.1    2026-05-11
 
 - Reverted accidental change to ~when$~'s indentation declaration.
