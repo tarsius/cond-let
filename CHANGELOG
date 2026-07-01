@@ -1,7 +1,11 @@
 # -*- mode: org -*-
+* v1.1.3    2026-07-01
+
+- Fixed a typo in documentation.
+
 * v1.1.2    2026-06-01
 
-- Fix a test pasto and a docstring typo.
+- Fixed a test pasto and a docstring typo.
 
 * v1.1.1    2026-05-11
 
