@@ -1,4 +1,8 @@
 # -*- mode: org -*-
+* v1.1.5    2026-10-01
+
+- Added readme badges.  c737a26
+
 * v1.1.4    2026-09-01
 
 - Added ~cond-let-fontify-mode~.  bbe1f1c
