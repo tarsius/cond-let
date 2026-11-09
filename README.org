@@ -10,7 +10,7 @@ This package additionally provides more consistent and improved
 implementations of the binding conditionals already provided by
 Emacs.  Merely loading this library does not shadow the built-in
 implementations; this can optionally be done in the context of
-an individual library, as described below.
+an individual library.
 
 ~cond-let~ and ~cond-let*~ are provided exactly under these names.
 The names of all other macros implemented by this package begin
@@ -20,9 +20,10 @@ Users of this package are not expected to use these unwieldy
 names.  Instead one should use Emacs' shorthand feature to use
 all or some of these macros by their conceptual names.
 
-Please see the library header for usage information and the
-docstrings for information about the individual macros.
-See also https://github.com/tarsius/cond-let/wiki.
+The [[https://github.com/tarsius/cond-let/blob/main/cond-let.el#L30][library header]] explains how to use shorthands and how to
+teach font-lock about these forms.  See their docstrings for
+information about the individual macros.  Visit the [[https://github.com/tarsius/cond-let/wiki][wiki]] for
+additional information.
 
 #+html: <br><br>
 #+html: <a href="https://github.com/tarsius/cond-let/actions/workflows/compile.yml"><img alt="Compile" src="https://github.com/tarsius/cond-let/actions/workflows/compile.yml/badge.svg"/></a>
